@@ -1,0 +1,16 @@
+{
+    "name": "Digicre.GameKit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5952c21bea3954a44b47a5f331bc9ce4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

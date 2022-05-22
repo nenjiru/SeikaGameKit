@@ -1,2 +1,2 @@
-# SeikaGameKit
-Kyoto Seika University Game Support Kit
+# ✿ Seika Game Kit
+ゲーム開発支援ライブラリ
