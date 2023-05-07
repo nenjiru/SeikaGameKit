@@ -81,7 +81,11 @@ namespace SeikaGameKit.Helper
         {
             Color tmpColor = Handles.color;
             Handles.color = _color;
-            Matrix4x4 matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
+            Quaternion rot = transform.rotation;
+            if (capsule.direction == 0) rot *= Quaternion.Euler(0, 0, 90);
+            if (capsule.direction == 2) rot *= Quaternion.Euler(90, 0, 0);
+
+            Matrix4x4 matrix = Matrix4x4.TRS(transform.position, rot, transform.lossyScale);
             using (new Handles.DrawingScope(matrix))
             {
                 float radius = capsule.radius;
