@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -47,4 +46,3 @@ namespace SeikaGameKit.Helper
         }
     }
 }
-#endif

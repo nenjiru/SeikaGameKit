@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -24,4 +23,3 @@ namespace SeikaGameKit
         }
     }
 }
-#endif
