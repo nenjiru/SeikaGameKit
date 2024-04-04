@@ -14,6 +14,7 @@ namespace SeikaGameKit.Helper
         {
             Cube,
             Sphere,
+            Capsule,
             Collider,
         }
         #endregion
@@ -24,6 +25,7 @@ namespace SeikaGameKit.Helper
         [SerializeField, Tooltip("描画の形状")] DrawType _type = DrawType.Cube;
         [SerializeField, Tooltip("領域を指定")] Vector3 _size = Vector3.one;
         [SerializeField, Tooltip("半径を指定")] float _radius = 0.5f;
+        [SerializeField, Tooltip("高さを指定")] float _height = 2f;
         Collider _collider;
         #endregion
 
@@ -48,6 +50,10 @@ namespace SeikaGameKit.Helper
             {
                 Gizmos.DrawSphere(Vector3.zero, _radius);
             }
+            else if (_type == DrawType.Capsule)
+            {
+                DrawWire.DrawCapsuleGizmo(transform, _radius, _height, 1, _color);
+            }
             else if (_type == DrawType.Collider)
             {
                 if (_collider == null)
@@ -55,17 +61,37 @@ namespace SeikaGameKit.Helper
                     _collider = GetComponent<Collider>();
                 }
 
-                if (_collider is BoxCollider)
+                switch (_collider)
                 {
-                    Gizmos.DrawWireCube(Vector3.zero + (_collider as BoxCollider).center, (_collider as BoxCollider).size);
+                    case BoxCollider box:
+                        Gizmos.DrawWireCube(Vector3.zero + box.center, box.size);
+                        break;
+                    case CapsuleCollider capsule:
+                        DrawWire.DrawCapsuleGizmo(transform, capsule.radius, capsule.height, capsule.direction, _color);
+                        break;
+                    case SphereCollider sphere:
+                        Gizmos.DrawWireSphere(Vector3.zero + sphere.center, sphere.radius);
+                        break;
                 }
-                else if (_collider is CapsuleCollider)
+            }
+            else if (_type == DrawType.Collider)
+            {
+                if (_collider == null)
                 {
-                    DrawCapsuleGizmo(_collider as CapsuleCollider);
+                    _collider = GetComponent<Collider>();
                 }
-                else if (_collider is SphereCollider)
+
+                switch (_collider)
                 {
-                    Gizmos.DrawWireSphere(Vector3.zero + (_collider as SphereCollider).center, (_collider as SphereCollider).radius);
+                    case BoxCollider box:
+                        Gizmos.DrawWireCube(Vector3.zero + box.center, box.size);
+                        break;
+                    case CapsuleCollider capsule:
+                        DrawWire.DrawCapsuleGizmo(transform, capsule.radius, capsule.height, capsule.direction, _color);
+                        break;
+                    case SphereCollider sphere:
+                        Gizmos.DrawWireSphere(Vector3.zero + sphere.center, sphere.radius);
+                        break;
                 }
             }
 
@@ -78,33 +104,47 @@ namespace SeikaGameKit.Helper
         #endregion
 
         #region PRIVATE_METHODS
-        private void DrawCapsuleGizmo(CapsuleCollider capsule)
+        public static void DrawCapsuleGizmo(Transform transform, float radius, float height, int direction, Color color = default)
+        {
+            DrawCapsuleGizmo(transform, radius, height, direction, Vector3.zero, color);
+        }
+
+        public static void DrawCapsuleGizmo(Transform transform, float radius, float height, Vector3 offset, Color color = default)
+        {
+            DrawCapsuleGizmo(transform, radius, height, 1, offset, color);
+        }
+
+        /// <summary>
+        /// カプセル状のワイヤーを描画
+        /// </summary>
+        public static void DrawCapsuleGizmo(Transform transform, float radius, float height, int direction, Vector3 offset, Color color = default)
         {
             Color tmpColor = Handles.color;
-            Handles.color = _color;
+            Handles.color = color == default ? Color.white : color;
             Quaternion rot = transform.rotation;
-            if (capsule.direction == 0) rot *= Quaternion.Euler(0, 0, 90);
-            if (capsule.direction == 2) rot *= Quaternion.Euler(90, 0, 0);
+            switch (direction)
+            {
+                case 0: rot *= Quaternion.Euler(0, 0, 90); break;
+                case 2: rot *= Quaternion.Euler(90, 0, 0); break;
+            }
 
-            Matrix4x4 matrix = Matrix4x4.TRS(transform.position, rot, transform.lossyScale);
+            Matrix4x4 matrix = Matrix4x4.TRS(transform.position + offset, rot, transform.lossyScale);
             using (new Handles.DrawingScope(matrix))
             {
-                float radius = capsule.radius;
-                float offset = (capsule.height - (radius * 2)) / 2;
-
+                float halfHeight = (height - (radius * 2)) / 2;
                 //draw side ways
-                Handles.DrawWireArc(Vector3.up * offset, Vector3.left, Vector3.back, -180, radius);
-                Handles.DrawLine(new Vector3(0, offset, -radius), new Vector3(0, -offset, -radius));
-                Handles.DrawLine(new Vector3(0, offset, radius), new Vector3(0, -offset, radius));
-                Handles.DrawWireArc(Vector3.down * offset, Vector3.left, Vector3.back, 180, radius);
+                Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.left, Vector3.back, -180, radius);
+                Handles.DrawLine(new Vector3(0, halfHeight, -radius), new Vector3(0, -halfHeight, -radius));
+                Handles.DrawLine(new Vector3(0, halfHeight, radius), new Vector3(0, -halfHeight, radius));
+                Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.left, Vector3.back, 180, radius);
                 //draw front ways
-                Handles.DrawWireArc(Vector3.up * offset, Vector3.back, Vector3.left, 180, radius);
-                Handles.DrawLine(new Vector3(-radius, offset, 0), new Vector3(-radius, -offset, 0));
-                Handles.DrawLine(new Vector3(radius, offset, 0), new Vector3(radius, -offset, 0));
-                Handles.DrawWireArc(Vector3.down * offset, Vector3.back, Vector3.left, -180, radius);
+                Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.back, Vector3.left, 180, radius);
+                Handles.DrawLine(new Vector3(-radius, halfHeight, 0), new Vector3(-radius, -halfHeight, 0));
+                Handles.DrawLine(new Vector3(radius, halfHeight, 0), new Vector3(radius, -halfHeight, 0));
+                Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.back, Vector3.left, -180, radius);
                 //draw center
-                Handles.DrawWireDisc(Vector3.up * offset, Vector3.up, radius);
-                Handles.DrawWireDisc(Vector3.down * offset, Vector3.up, radius);
+                Handles.DrawWireDisc(Vector3.up * halfHeight, Vector3.up, radius);
+                Handles.DrawWireDisc(Vector3.down * halfHeight, Vector3.up, radius);
             }
             Handles.color = tmpColor;
         }

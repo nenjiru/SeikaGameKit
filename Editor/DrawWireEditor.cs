@@ -12,6 +12,7 @@ namespace SeikaGameKit.Helper
         SerializedProperty _type;
         SerializedProperty _size;
         SerializedProperty _radius;
+        SerializedProperty _height;
 
         void OnEnable()
         {
@@ -21,6 +22,7 @@ namespace SeikaGameKit.Helper
             _type = serializedObject.FindProperty("_type");
             _size = serializedObject.FindProperty("_size");
             _radius = serializedObject.FindProperty("_radius");
+            _height = serializedObject.FindProperty("_height");
         }
 
         public override void OnInspectorGUI()
@@ -38,6 +40,11 @@ namespace SeikaGameKit.Helper
             }
             if (type == DrawWire.DrawType.Sphere)
             {
+                EditorGUILayout.PropertyField(_radius);
+            }
+            if (type == DrawWire.DrawType.Capsule)
+            {
+                EditorGUILayout.PropertyField(_height);
                 EditorGUILayout.PropertyField(_radius);
             }
             _type.enumValueIndex = (int)type;

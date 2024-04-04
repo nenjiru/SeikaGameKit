@@ -4,13 +4,17 @@ using UnityEngine;
 namespace SeikaGameKit.Helper
 {
     /// <summary>
-    /// 撮影範囲を表示する
+    /// カメラの視錐台を描画する
     /// </summary>
     public class CameraGizmo : MonoBehaviour
     {
-        public Color gizmosColor = Color.gray;
+        #region VARIABLE
+        [SerializeField]
+        Color _drawColor = Color.cyan;
         Camera _camera = null;
+        #endregion
 
+        #region UNITY_EVENT
         void OnDrawGizmos()
         {
             if (_camera == null)
@@ -18,21 +22,33 @@ namespace SeikaGameKit.Helper
                 _camera = GetComponent<Camera>();
             }
 
-            float fov = _camera.fieldOfView;
-            float size = _camera.orthographicSize;
-            float max = _camera.farClipPlane;
-            float min = _camera.nearClipPlane;
-            float aspect = _camera.aspect;
+            CameraGizmo.DrawCameraFrustum(_camera, _drawColor);
+        }
+        #endregion
+
+        #region PUBLIC_METHODS
+        /// <summary>
+        /// カメラ視錐台を描画
+        /// </summary>
+        public static void DrawCameraFrustum(Camera camera, Color color = default)
+        {
+            if (camera == null) return;
+
+            float fov = camera.fieldOfView;
+            float size = camera.orthographicSize;
+            float max = camera.farClipPlane;
+            float min = camera.nearClipPlane;
+            float aspect = camera.aspect;
 
             Color tempColor = Gizmos.color;
-            Gizmos.color = gizmosColor;
+            Gizmos.color = color == default ? Color.white : color;
 
             Matrix4x4 tempMat = Gizmos.matrix;
-            Gizmos.matrix = Matrix4x4.TRS(this.transform.position, this.transform.rotation, new Vector3(aspect, 1.0f, 1.0f));
+            Gizmos.matrix = Matrix4x4.TRS(camera.transform.position, camera.transform.rotation, new Vector3(aspect, 1.0f, 1.0f));
 
-            if (_camera.orthographic)
+            if (camera.orthographic)
             {
-                Gizmos.DrawWireCube(new Vector3(0.0f, 0.0f, ((max - min) / 2.0f) + min), new Vector3(size * 2.0f, size * 2.0f, max - min));
+                Gizmos.DrawWireCube(Vector3.forward * ((max - min) / 2.0f) + Vector3.forward * min, new Vector3(size * 2.0f * aspect, size * 2.0f, max - min));
             }
             else
             {
@@ -42,6 +58,10 @@ namespace SeikaGameKit.Helper
             Gizmos.color = tempColor;
             Gizmos.matrix = tempMat;
         }
+        #endregion
+
+        #region PRIVATE_METHODS
+        #endregion
     }
 }
 #endif
