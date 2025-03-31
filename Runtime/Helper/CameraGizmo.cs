@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEngine;
 
 namespace SeikaGameKit.Helper
@@ -15,6 +14,7 @@ namespace SeikaGameKit.Helper
         #endregion
 
         #region UNITY_EVENT
+#if UNITY_EDITOR
         void OnDrawGizmos()
         {
             if (_camera == null)
@@ -24,12 +24,14 @@ namespace SeikaGameKit.Helper
 
             CameraGizmo.DrawCameraFrustum(_camera, _drawColor);
         }
+#endif
         #endregion
 
-        #region PUBLIC_METHODS
+        #region PUBLIC_METHOD
         /// <summary>
         /// カメラ視錐台を描画
         /// </summary>
+#if UNITY_EDITOR
         public static void DrawCameraFrustum(Camera camera, Color color = default)
         {
             if (camera == null) return;
@@ -58,10 +60,10 @@ namespace SeikaGameKit.Helper
             Gizmos.color = tempColor;
             Gizmos.matrix = tempMat;
         }
+#endif
         #endregion
 
-        #region PRIVATE_METHODS
+        #region PRIVATE_METHOD
         #endregion
     }
 }
-#endif

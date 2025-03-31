@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -10,7 +11,14 @@ namespace SeikaGameKit
         protected virtual void ScriptField()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour((MonoBehaviour)target), typeof(MonoScript), false);
+            if (target is MonoBehaviour)
+            {
+                EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour((MonoBehaviour)target), typeof(Object), false);
+            }
+            else if (target is ScriptableObject)
+            {
+                EditorGUILayout.ObjectField("Script", MonoScript.FromScriptableObject((ScriptableObject)target), typeof(Object), false);
+            }
             EditorGUILayout.ObjectField("Editor", MonoScript.FromScriptableObject(this), typeof(BaseEditor), false);
             EditorGUI.EndDisabledGroup();
         }
@@ -25,3 +33,4 @@ namespace SeikaGameKit
         }
     }
 }
+#endif

@@ -1,6 +1,4 @@
-#if UNITY_EDITOR
 using UnityEngine;
-using UnityEditor;
 
 namespace SeikaGameKit.Helper
 {
@@ -29,6 +27,7 @@ namespace SeikaGameKit.Helper
         Collider _collider;
         #endregion
 
+#if UNITY_EDITOR
         #region UNITY_EVENT
         void OnDrawGizmos()
         {
@@ -74,36 +73,13 @@ namespace SeikaGameKit.Helper
                         break;
                 }
             }
-            else if (_type == DrawType.Collider)
-            {
-                if (_collider == null)
-                {
-                    _collider = GetComponent<Collider>();
-                }
-
-                switch (_collider)
-                {
-                    case BoxCollider box:
-                        Gizmos.DrawWireCube(Vector3.zero + box.center, box.size);
-                        break;
-                    case CapsuleCollider capsule:
-                        DrawWire.DrawCapsuleGizmo(transform, capsule.radius, capsule.height, capsule.direction, _color);
-                        break;
-                    case SphereCollider sphere:
-                        Gizmos.DrawWireSphere(Vector3.zero + sphere.center, sphere.radius);
-                        break;
-                }
-            }
 
             Gizmos.color = tmpColor;
             Gizmos.matrix = tmpMat;
         }
         #endregion
 
-        #region PUBLIC_METHODS
-        #endregion
-
-        #region PRIVATE_METHODS
+        #region PUBLIC_METHOD
         public static void DrawCapsuleGizmo(Transform transform, float radius, float height, int direction, Color color = default)
         {
             DrawCapsuleGizmo(transform, radius, height, direction, Vector3.zero, color);
@@ -113,14 +89,16 @@ namespace SeikaGameKit.Helper
         {
             DrawCapsuleGizmo(transform, radius, height, 1, offset, color);
         }
+        #endregion
 
+        #region PRIVATE_METHOD
         /// <summary>
-        /// カプセル状のワイヤーを描画
+        /// Drawing capsule wires
         /// </summary>
-        public static void DrawCapsuleGizmo(Transform transform, float radius, float height, int direction, Vector3 offset, Color color = default)
+        private static void DrawCapsuleGizmo(Transform transform, float radius, float height, int direction, Vector3 offset, Color color = default)
         {
-            Color tmpColor = Handles.color;
-            Handles.color = color == default ? Color.white : color;
+            Color tmpColor = UnityEditor.Handles.color;
+            UnityEditor.Handles.color = color == default ? Color.white : color;
             Quaternion rot = transform.rotation;
             switch (direction)
             {
@@ -129,26 +107,26 @@ namespace SeikaGameKit.Helper
             }
 
             Matrix4x4 matrix = Matrix4x4.TRS(transform.position + offset, rot, transform.lossyScale);
-            using (new Handles.DrawingScope(matrix))
+            using (new UnityEditor.Handles.DrawingScope(matrix))
             {
                 float halfHeight = (height - (radius * 2)) / 2;
                 //draw side ways
-                Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.left, Vector3.back, -180, radius);
-                Handles.DrawLine(new Vector3(0, halfHeight, -radius), new Vector3(0, -halfHeight, -radius));
-                Handles.DrawLine(new Vector3(0, halfHeight, radius), new Vector3(0, -halfHeight, radius));
-                Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.left, Vector3.back, 180, radius);
+                UnityEditor.Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.left, Vector3.back, -180, radius);
+                UnityEditor.Handles.DrawLine(new Vector3(0, halfHeight, -radius), new Vector3(0, -halfHeight, -radius));
+                UnityEditor.Handles.DrawLine(new Vector3(0, halfHeight, radius), new Vector3(0, -halfHeight, radius));
+                UnityEditor.Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.left, Vector3.back, 180, radius);
                 //draw front ways
-                Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.back, Vector3.left, 180, radius);
-                Handles.DrawLine(new Vector3(-radius, halfHeight, 0), new Vector3(-radius, -halfHeight, 0));
-                Handles.DrawLine(new Vector3(radius, halfHeight, 0), new Vector3(radius, -halfHeight, 0));
-                Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.back, Vector3.left, -180, radius);
+                UnityEditor.Handles.DrawWireArc(Vector3.up * halfHeight, Vector3.back, Vector3.left, 180, radius);
+                UnityEditor.Handles.DrawLine(new Vector3(-radius, halfHeight, 0), new Vector3(-radius, -halfHeight, 0));
+                UnityEditor.Handles.DrawLine(new Vector3(radius, halfHeight, 0), new Vector3(radius, -halfHeight, 0));
+                UnityEditor.Handles.DrawWireArc(Vector3.down * halfHeight, Vector3.back, Vector3.left, -180, radius);
                 //draw center
-                Handles.DrawWireDisc(Vector3.up * halfHeight, Vector3.up, radius);
-                Handles.DrawWireDisc(Vector3.down * halfHeight, Vector3.up, radius);
+                UnityEditor.Handles.DrawWireDisc(Vector3.up * halfHeight, Vector3.up, radius);
+                UnityEditor.Handles.DrawWireDisc(Vector3.down * halfHeight, Vector3.up, radius);
             }
-            Handles.color = tmpColor;
+            UnityEditor.Handles.color = tmpColor;
         }
         #endregion
+#endif
     }
 }
-#endif
