@@ -13,6 +13,7 @@ namespace SeikaGameKit
         private static readonly string[] projectFolders = new string[]
         {
             "Assets/_Project",
+            "Assets/_Project/Animations",
             "Assets/_Project/Audios",
             "Assets/_Project/Effects",
             "Assets/_Project/Fonts",
@@ -25,7 +26,6 @@ namespace SeikaGameKit
             "Assets/_Project/Scripts",
             "Assets/_Project/Shaders",
             "Assets/_Project/Sprites",
-            "Assets/_Project/Timelines",
             "Assets/Resources",
         };
 
