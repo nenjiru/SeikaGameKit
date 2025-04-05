@@ -5,7 +5,7 @@ using System.IO;
 
 namespace SeikaGameKit
 {
-    public class CustomLayout : MonoBehaviour
+    public class CustomLayout
     {
         private const string LAYOUT_ASSET = "Packages/jp.digicre.seika-game-kit/Resources/Layouts/SGKitLayout.wlt";
 
@@ -13,7 +13,7 @@ namespace SeikaGameKit
         static void LoadCustomLayout()
         {
             string path = Path.GetFullPath(LAYOUT_ASSET);
-            if (System.IO.File.Exists(path))
+            if (File.Exists(path))
             {
                 EditorUtility.LoadWindowLayout(path);
             }
