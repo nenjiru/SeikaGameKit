@@ -4,15 +4,15 @@ using UnityEditor;
 
 namespace SeikaGameKit
 {
-    public class MeterGridCreator
+    public class SceneDesignlHelpers
     {
-        private static readonly string MaterialPath = "Packages/jp.digicre.seika-game-kit/Resources/Materials/MeterGrid.mat";
+        private static readonly string MaterialPath = "Packages/jp.digicre.seika-game-kit/Resources/Materials/ScaleGrid.mat";
 
-        [MenuItem("GameObject/3D Object/Meter Grid (Plane)")]
+        [MenuItem("GameObject/Seika Game Kit/Scale Grid (10m)", false)]
         public static void CreateMeterGridPlane()
         {
             GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            plane.name = "Meter Grid";
+            plane.name = "Scale Grid (10m)";
 
             Material gridMaterial = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath);
             if (gridMaterial != null)
