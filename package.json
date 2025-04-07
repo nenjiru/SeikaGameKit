@@ -1,6 +1,6 @@
 {
   "name": "jp.digicre.seika-game-kit",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "displayName": "Seika Game Kit",
   "description": "Game Development Support Kit.",
   "unity": "2022.3",
