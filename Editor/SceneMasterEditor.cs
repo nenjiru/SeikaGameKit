@@ -54,6 +54,7 @@ namespace SeikaGameKit.SceneManagement
 
         #region PRIVATE_METHOD
         // Creates a new SceneMaster asset
+        [MenuItem("Seika Game Kit/Create Scene Master")]
         [MenuItem("Assets/Create/Seika Game Kit/Scene Master")]
         private static void CreateSceneMasterAsset()
         {

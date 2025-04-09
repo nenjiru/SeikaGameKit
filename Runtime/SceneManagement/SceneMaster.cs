@@ -121,7 +121,6 @@ namespace SeikaGameKit.SceneManagement
         /// <summary>
         /// Creates a new SceneMaster asset in the Resources folder
         /// </summary>
-        // [MenuItem("Assets/Create/Seika Game Kit/Scene Master")]
         public static void CreateAsset()
         {
             string[] guids = UnityEditor.AssetDatabase.FindAssets("t:SceneMaster");
