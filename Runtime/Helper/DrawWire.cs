@@ -27,6 +27,14 @@ namespace SeikaGameKit.Helper
         [SerializeField, Tooltip("高さを指定")] float _height = 2f;
         Camera _camera = null;
         Collider _collider = null;
+
+        // Public properties for editor access
+        public bool Enable { get => _enable; set => _enable = value; }
+        public DrawType Type { get => _type; set => _type = value; }
+        public Color Color { get => _color; set => _color = value; }
+        public Vector3 Size { get => _size; set => _size = value; }
+        public float Radius { get => _radius; set => _radius = value; }
+        public float Height { get => _height; set => _height = value; }
         #endregion
 
 #if UNITY_EDITOR

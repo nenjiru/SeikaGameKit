@@ -3,7 +3,8 @@ using UnityEditor;
 
 namespace SeikaGameKit.Helper
 {
-    [CustomEditor(typeof(DrawWire))]
+    [CustomEditor(typeof(DrawWire), true)]
+    [CanEditMultipleObjects]
     public class DrawWireEditor : BaseEditor
     {
         SerializedProperty _enable;
@@ -30,27 +31,44 @@ namespace SeikaGameKit.Helper
             serializedObject.Update();
             base.ScriptField();
 
+            // Handle mixed values for multi-object editing
+            EditorGUI.showMixedValue = _enable.hasMultipleDifferentValues;
             EditorGUILayout.PropertyField(_enable);
+            EditorGUI.showMixedValue = false;
 
             if (_enable.boolValue)
             {
+                EditorGUI.showMixedValue = _type.hasMultipleDifferentValues;
                 var type = (DrawWire.DrawType)EditorGUILayout.Popup("Type", _type.enumValueIndex, _drawTypes);
+                _type.enumValueIndex = (int)type;
+                EditorGUI.showMixedValue = false;
+
                 if (type == DrawWire.DrawType.Cube)
                 {
+                    EditorGUI.showMixedValue = _size.hasMultipleDifferentValues;
                     EditorGUILayout.PropertyField(_size);
+                    EditorGUI.showMixedValue = false;
                 }
                 if (type == DrawWire.DrawType.Sphere)
                 {
+                    EditorGUI.showMixedValue = _radius.hasMultipleDifferentValues;
                     EditorGUILayout.PropertyField(_radius);
+                    EditorGUI.showMixedValue = false;
                 }
                 if (type == DrawWire.DrawType.Capsule)
                 {
+                    EditorGUI.showMixedValue = _height.hasMultipleDifferentValues;
                     EditorGUILayout.PropertyField(_height);
-                    EditorGUILayout.PropertyField(_radius);
-                }
-                _type.enumValueIndex = (int)type;
+                    EditorGUI.showMixedValue = false;
 
+                    EditorGUI.showMixedValue = _radius.hasMultipleDifferentValues;
+                    EditorGUILayout.PropertyField(_radius);
+                    EditorGUI.showMixedValue = false;
+                }
+
+                EditorGUI.showMixedValue = _color.hasMultipleDifferentValues;
                 EditorGUILayout.PropertyField(_color);
+                EditorGUI.showMixedValue = false;
             }
 
             serializedObject.ApplyModifiedProperties();
